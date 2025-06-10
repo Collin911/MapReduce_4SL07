@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 public class ServerHandler {
     private ServerSocket serverSocket;
     private boolean running = false;
+    
 
     public void startServer(int port, Consumer<Message> onMessage) throws IOException {
         serverSocket = new ServerSocket(port);
