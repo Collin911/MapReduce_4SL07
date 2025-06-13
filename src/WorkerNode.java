@@ -38,7 +38,10 @@ public class WorkerNode {
                 this.reduce2Counts();
             }
             if (msg.getMsgType() == 3) {
-                this.sortByTimes(false);
+                this.sortWordCounts(true, true);
+            }
+            if  (msg.getMsgType() == 4){
+                this.redistribute(msg);
             }
         }
         catch (IOException e){
@@ -48,6 +51,10 @@ public class WorkerNode {
     }
 
     private void countAndShuffle(Message msg) throws IOException {
+        // This method takes one Message containing a String at a time
+        // splits into words, generates WordPairs with count=1
+        // sends the generated WordPairs according to hash function
+        // and reports to master node once it has finished
         String text = msg.getPayload().toString();
         for (String word : text.split("\\s+")) {
             WordPair wp = new WordPair(word, 1);
@@ -62,11 +69,16 @@ public class WorkerNode {
     }
 
     private void saveWordPairs(Message msg) throws IOException {
+        // This method takes one Message containing a WordPair at a time
+        // and adds the WordPair into its own list
         WordPair wp = (WordPair)msg.getPayload();
         this.words.add(wp);
     }
 
     private void reduce2Counts() throws IOException {
+        // This method iterates over LOCAL WordPair list
+        // to count the word frequency
+        // and reports to master node once it has finished
         for(WordPair wp : words){
             wordCounts.put(wp.word, wordCounts.getOrDefault(wp.word, 0) + wp.count);
             // System.out.println("Node " + id + " has " + wp.word + wordCounts.get(wp.word));
@@ -76,22 +88,13 @@ public class WorkerNode {
         System.out.println("Node " + id + "finished reducing ");
     }
 
-    /*private void sortByTimes(){
-        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(this.wordCounts.entrySet());
-        entryList.sort((e1, e2) -> e1.getValue().compareTo(e2.getValue()));
-
-        Map<String, Integer> sortedMap = new ConcurrentHashMap<>();
-        for (Map.Entry<String, Integer> entry : entryList) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        this.wordCounts = sortedMap;
-        printCounts();
-        Message localSort = new Message();
-    }*/
-
-    private void sortByTimes(boolean ascending) {
-        Comparator<Map.Entry<String, Integer>> comparator =
-                Map.Entry.comparingByValue();
+    private void sortWordCounts(boolean ascending, boolean byCounts) throws IOException {
+        // This method sort LOCAL wordCounts map
+        // and reports to master node once it has finished
+        // This method is updated to be able to sort according to words for re-using
+        Comparator<Map.Entry<String, Integer>> comparator = byCounts
+                ? Map.Entry.comparingByValue()
+                : Map.Entry.comparingByKey();
 
         if (!ascending) {
             comparator = comparator.reversed();
@@ -109,11 +112,50 @@ public class WorkerNode {
 
         wordCounts = sortedMap;
         printCounts();
-        int max = wordCounts.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null).getValue();
-        int min = wordCounts.entrySet().stream().min(Map.Entry.comparingByValue()).orElse(null).getValue();
-        int size = wordCounts.size();
-        LocalSortResult res = new LocalSortResult(max, min, size, id);
-        Message localSort = new Message(-2, res);
+
+        // Only compute max, min, size if sorting by count
+        int max = -1, min = -1;
+        if (byCounts && !wordCounts.isEmpty()) {
+            max = wordCounts.entrySet().stream()
+                    .max(Map.Entry.comparingByValue()).orElseThrow().getValue();
+            min = wordCounts.entrySet().stream()
+                    .min(Map.Entry.comparingByValue()).orElseThrow().getValue();
+            int size = wordCounts.size();
+            LocalSortResult res = new LocalSortResult(max, min, size, id);
+            Message localSort = new Message(-2, res);
+            handler.sendMessage("localhost", port-id-1, localSort);
+        }
+
+    }
+
+    private void redistribute(Message msg) throws IOException {
+        ArrayList<Integer> splits = (ArrayList<Integer>) msg.getPayload();
+        Map<String, Integer> myNewWordCounts = new ConcurrentHashMap<>();
+
+        for (Map.Entry<String, Integer> entry : wordCounts.entrySet()) {
+            String word = entry.getKey();
+            int count = entry.getValue();
+
+            // Determine which worker this word-count should go to
+            int destId = 0;
+            for (int i = 0; i < splits.size(); i++) {
+                if (count <= splits.get(i)) {
+                    destId = i;
+                    break;
+                }
+            }
+
+            if (destId == this.id) {
+                myNewWordCounts.put(word, count);
+            } else {
+                WordPair wp = new WordPair(word, count);
+                Message wpMsg = new Message(5, wp);
+                handler.sendMessage("localhost", port-id + destId, wpMsg);
+            }
+        }
+        this.wordCounts = myNewWordCounts;
+        Message finiMsg = new Message(-1, this.id);
+        handler.sendMessage("localhost", port-id-1, finiMsg);
     }
 
     private void printCounts() {

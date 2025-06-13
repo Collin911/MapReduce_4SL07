@@ -11,6 +11,9 @@ public class MasterNode {
     private boolean allTasksDispatched = false;
     private enum Phase { MAPPING1, REDUCING1, MAPPING2, REDUCING2 }
     private Phase currentPhase = Phase.MAPPING1;
+    private int globalMax = -Integer.MAX_VALUE;
+    private int globalMin = Integer.MAX_VALUE;
+    private int totalSize = 0;
 
     public MasterNode(int port, int N) throws Exception {
         this.port = port;
@@ -42,24 +45,40 @@ public class MasterNode {
             if (msg.getMsgType() == -1) {
                 // MessageType: WorkerCurrentTaskFinished
                 status[(int) msg.getPayload()].decrementAndGet();
-                ;
                 if (checkStatus()) {
                     if(currentPhase == Phase.MAPPING1 && allTasksDispatched){
                         System.out.println("All nodes finished mapping.");
-                        resetStatus(1); // Reducing task is strictly individual
+                        resetStatus(1); // the following task (reduce1) is strictly individual
                         currentPhase = Phase.REDUCING1;
                         Message startReduce1 = new Message(2);
                         broadcastMessage(startReduce1);
                     }
                     else if(currentPhase == Phase.REDUCING1){
                         System.out.println("All nodes finished reducing.");
-                        Message startMapping2 = new Message(3);
-                        broadcastMessage(startMapping2);
+                        resetStatus(1); // the following task (local sort) is strictly individual
+                        currentPhase = Phase.MAPPING2;
+                        Message startLocalSort = new Message(3);
+                        broadcastMessage(startLocalSort);
+                    }
+                    else if(currentPhase == Phase.MAPPING2){
+                        System.out.println("All nodes finished redistributing.");
                     }
                 }
             }
             else if (msg.getMsgType() == -2) {
                 // Message Type: WorkerCurrentLocalSortingFinished
+                LocalSortResult res = (LocalSortResult) msg.getPayload();
+                status[res.getId()].decrementAndGet();
+                globalMax = Math.max(res.getMax(), globalMax);
+                globalMin = Math.min(res.getMin(), globalMin);
+                totalSize += res.getSize();
+                if (checkStatus() && currentPhase == Phase.MAPPING2) {
+                    System.out.println("All nodes finished local sorting.");
+                    ArrayList<Integer> groupInfo = group(globalMin, globalMax, N);
+                    resetStatus(1);
+                    Message startMapping2  = new Message(4, groupInfo);
+                    broadcastMessage(startMapping2);
+                }
             }
         }
         catch (IOException e){
@@ -77,6 +96,22 @@ public class MasterNode {
             nodePtr %= this.N;
         }
         allTasksDispatched = true;
+    }
+
+    private ArrayList<Integer> group(int min, int max, int workerSize){
+        ArrayList<Integer> splitPoints = new ArrayList<>();
+        int range = max - min + 1;
+        int step = range / workerSize;
+        int remainder = range % workerSize;
+
+        int current = min;
+        for (int i = 0; i < workerSize; i++) {
+            int width = step + (i < remainder ? 1 : 0);  // distribute remainder evenly
+            current += width - 1;
+            splitPoints.add(current);
+            current++; // move to next bucket
+        }
+        return splitPoints;
     }
 
     private void resetStatus(int value) {
