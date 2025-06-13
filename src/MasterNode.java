@@ -59,7 +59,7 @@ public class MasterNode {
                 }
             }
             else if (msg.getMsgType() == -2) {
-                // Message Type
+                // Message Type: WorkerCurrentLocalSortingFinished
             }
         }
         catch (IOException e){

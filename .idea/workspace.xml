@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1097a05-daab-46f9-acf8-99eb5e8fd998" name="Changes" comment="Initialize">
-      <change afterPath="$PROJECT_DIR$/src/MasterNode.java" afterDir="false" />
+    <list default="true" id="a1097a05-daab-46f9-acf8-99eb5e8fd998" name="Changes" comment="map1 reduce1 finished">
+      <change afterPath="$PROJECT_DIR$/src/LocalSortResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MasterNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MasterNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/WorkerNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/WorkerNode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,6 +38,9 @@
     &quot;accountId&quot;: &quot;3e623089-706d-4e21-bfe4-a073324e0100&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -82,7 +84,9 @@
       <option name="presentableId" value="Default" />
       <updated>1748257729639</updated>
       <workItem from="1748257730686" duration="7386000" />
-      <workItem from="1749191818996" duration="13536000" />
+      <workItem from="1749191818996" duration="15070000" />
+      <workItem from="1749560616052" duration="1392000" />
+      <workItem from="1749798953512" duration="1068000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize">
       <option name="closed" value="true" />
@@ -92,7 +96,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748258270161</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="map1 reduce1 finished">
+      <option name="closed" value="true" />
+      <created>1749558547027</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1749558547027</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,6 +112,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initialize" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialize" />
+    <MESSAGE value="map1 reduce1 finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="map1 reduce1 finished" />
   </component>
 </project>

@@ -7,10 +7,10 @@ public class Main {
         MasterNode master = new MasterNode(12000, 3);
         ArrayList<String> tasks = new ArrayList<>();
 
-        tasks.add(0,"car car hello cat");
-        tasks.add(1, "dog cat cat hi");
-        tasks.add(2, "hi hello car car");
-        tasks.add(3, "hi hi hi hello car");
+        tasks.add(0,"car that car hello cat");
+        tasks.add(1, "dog cat cat hi this");
+        tasks.add(2, "hi hello this car car");
+        tasks.add(3, "hi hi hi that hello that car");
 
         master.start(tasks);
 
