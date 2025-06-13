@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1097a05-daab-46f9-acf8-99eb5e8fd998" name="Changes" comment="worker node local sorting finished">
-      <change afterPath="$PROJECT_DIR$/src/GroupInfo.java" afterDir="false" />
+    <list default="true" id="a1097a05-daab-46f9-acf8-99eb5e8fd998" name="Changes" comment="worker node redistributing finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MasterNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MasterNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/WorkerNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/WorkerNode.java" afterDir="false" />
     </list>
@@ -53,7 +53,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Debug",
+    "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -66,6 +66,21 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="SLR207_MapReduce" />
+      <option name="PROGRAM_PARAMETERS" value="../CC-MAIN-20230321002050-20230321032050-00446.warc.wet" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -85,7 +100,7 @@
       <workItem from="1748257730686" duration="7386000" />
       <workItem from="1749191818996" duration="15070000" />
       <workItem from="1749560616052" duration="1392000" />
-      <workItem from="1749798953512" duration="5934000" />
+      <workItem from="1749798953512" duration="9262000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize">
       <option name="closed" value="true" />
@@ -111,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749800269968</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="worker node redistributing finished">
+      <option name="closed" value="true" />
+      <created>1749805716793</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749805716793</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,16 +144,16 @@
     <MESSAGE value="Initialize" />
     <MESSAGE value="map1 reduce1 finished" />
     <MESSAGE value="worker node local sorting finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="worker node local sorting finished" />
+    <MESSAGE value="worker node redistributing finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="worker node redistributing finished" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/WorkerNode.java</url>
-          <line>153</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.net.ConnectException" package="java.net" />
+          <option name="timeStamp" value="5" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

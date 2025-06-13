@@ -1,17 +1,26 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        int N = 3;
+        int N = 5;
+        if (args.length < 1) {
+            System.err.println("Usage: java Main <input_file_path>");
+            System.exit(1);
+        }
 
-        MasterNode master = new MasterNode(12000, 3);
+        String filePath = args[0];
         ArrayList<String> tasks = new ArrayList<>();
 
-        tasks.add(0,"car that car hello cat");
-        tasks.add(1, "dog cat cat hi this");
-        tasks.add(2, "hi hello this car car");
-        tasks.add(3, "hi hi hi that hello that car");
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                tasks.add(line.trim());
+            }
+        }
 
+        MasterNode master = new MasterNode(12000, N);
         master.start(tasks);
 
         // Wait for messages to be delivered

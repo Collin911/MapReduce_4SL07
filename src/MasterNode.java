@@ -62,6 +62,10 @@ public class MasterNode {
                     }
                     else if(currentPhase == Phase.MAPPING2){
                         System.out.println("All nodes finished redistributing.");
+                        resetStatus(1); // the following task (local sort) is strictly individual
+                        currentPhase = Phase.REDUCING2;
+                        Message startWordSort = new Message(6);
+                        broadcastMessage(startWordSort);
                     }
                 }
             }

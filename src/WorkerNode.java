@@ -31,17 +31,27 @@ public class WorkerNode {
             }
             if (msg.getMsgType() == 1 && msg.getPayload() instanceof WordPair) {
                 // MessageType: PeerWordPair1
-                this.saveWordPairs(msg);
+                this.saveWordPairs(msg, 1);
             }
             if (msg.getMsgType() == 2) {
                 // MessageType: MasterInstructionToReduce
                 this.reduce2Counts();
             }
             if (msg.getMsgType() == 3) {
+                // MessageType: MasterInstructionToLocalSort
                 this.sortWordCounts(true, true);
             }
             if  (msg.getMsgType() == 4){
+                // MessageType: MasterInstructionToShuffle2
                 this.redistribute(msg);
+            }
+            if (msg.getMsgType() == 5){
+                // MessageType: PeerWordPair
+                this.saveWordPairs(msg, 2);
+            }
+            if (msg.getMsgType() == 6){
+                // MessageType: MasterInstructionToReduce2
+                this.sortWordCounts(true, false);
             }
         }
         catch (IOException e){
@@ -68,11 +78,16 @@ public class WorkerNode {
         System.out.println("Node " + id + "finished shuffling ");
     }
 
-    private void saveWordPairs(Message msg) throws IOException {
+    private void saveWordPairs(Message msg, int stage) throws IOException {
         // This method takes one Message containing a WordPair at a time
         // and adds the WordPair into its own list
         WordPair wp = (WordPair)msg.getPayload();
-        this.words.add(wp);
+        if(stage == 1){
+            this.words.add(wp);
+        }
+        else if(stage == 2){
+            this.wordCounts.put(wp.word, wp.count);
+        }
     }
 
     private void reduce2Counts() throws IOException {
